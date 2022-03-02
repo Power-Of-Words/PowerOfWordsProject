@@ -215,7 +215,7 @@ class _LoginPageState extends State<LoginPage> {
                               color: notPurple,
                               borderRadius: BorderRadius.circular(20)),
                           child: Text(
-                            "Get Start",
+                            "Get Started",
                             style: TextStyle(color: purple, fontSize: 30),
                             textAlign: TextAlign.center,
                           ),
@@ -247,14 +247,19 @@ class _LoginPageState extends State<LoginPage> {
               Container(
                 margin: EdgeInsets.only(top: 30, bottom: 100),
                 child: Column(children: <Widget>[
-                  InputBox(
-                    btnText: "Email",
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Email',
+                    ),
                     controller: emailController,
                   ),
-                  InputBox(
-                    btnText: "Password",
+                  TextFormField(
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                      labelText: 'Password',
+                    ),
                     controller: passwordController,
-                  ),
+                  )
                 ]),
               ),
               Flexible(
@@ -331,14 +336,23 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
             ),
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  _pageState = 3;
-                });
-              },
-              child: PrimaryButton(btnText: "Continue"),
-            )
+            ValueListenableBuilder<TextEditingValue>(
+                valueListenable: password,
+                builder: (context, value, child) {
+                  return ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      onSurface: Colors.blue,
+                    ),
+                    onPressed: value.text.isNotEmpty
+                        ? () {
+                            setState(() {
+                              _pageState = 3;
+                            });
+                          }
+                        : null,
+                    child: Text('Continue'),
+                  );
+                })
           ]),
         ),
 
@@ -393,7 +407,6 @@ class _LoginPageState extends State<LoginPage> {
     ));
   }
 
-
 /*************************************************************************************************
  * In this method, the users information is passed into the method to be inserted into the 
  * database as a new user. 
@@ -404,8 +417,8 @@ class _LoginPageState extends State<LoginPage> {
  * race - users selected race 
  *************************************************************************************************/
 
-  void addUser(String uid, String email, String password, DateTime birth, String first, 
-               String last, String gender, String race) {
+  void addUser(String uid, String email, String password, DateTime birth,
+      String first, String last, String gender, String race) {
     //creating a reference to access the Firebase RealTime Database
     final database = FirebaseDatabase.instance.ref();
 
