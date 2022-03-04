@@ -247,17 +247,12 @@ class _LoginPageState extends State<LoginPage> {
               Container(
                 margin: EdgeInsets.only(top: 30, bottom: 100),
                 child: Column(children: <Widget>[
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                    ),
+                  InputBox(
+                    btnText: "Email",
                     controller: emailController,
                   ),
-                  TextFormField(
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                      labelText: 'Password',
-                    ),
+                  PasswordBox(
+                    btnText: "Password",
                     controller: passwordController,
                   )
                 ]),
@@ -306,7 +301,7 @@ class _LoginPageState extends State<LoginPage> {
                     btnText: "Email",
                     controller: email,
                   ),
-                  InputBox(
+                  PasswordBox(
                     btnText: "Password",
                     controller: password,
                   ),
@@ -476,6 +471,14 @@ class InputBox extends StatefulWidget {
   _InputBoxState createState() => _InputBoxState();
 }
 
+class PasswordBox extends StatefulWidget {
+  final String btnText;
+  final TextEditingController controller;
+  PasswordBox({required this.btnText, required this.controller});
+  @override
+  _PasswordBoxState createState() => _PasswordBoxState();
+}
+
 class _InputBoxState extends State<InputBox> {
   var purple = Color(0xFF3B1B6A);
   var notPurple = Color.fromRGBO(213, 212, 234, 1);
@@ -489,7 +492,43 @@ class _InputBoxState extends State<InputBox> {
             border: Border.all(width: 2.5, color: purpleBorder),
             borderRadius: BorderRadius.circular(15)),
         child: Container(
-            child: TextField(
+            child: TextFormField(
+          controller: widget.controller,
+          textAlign: TextAlign.center,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: widget.btnText,
+            hintStyle: TextStyle(
+                fontSize: 30, color: Color.fromRGBO(226, 225, 240, 1)),
+            contentPadding: EdgeInsets.only(top: 15, bottom: 15),
+          ),
+        )));
+  }
+}
+
+class _PasswordBoxState extends State<PasswordBox> {
+  bool password = true;
+
+  void _toggle() {
+    setState(() {
+      password = !password;
+    });
+  }
+
+  var purple = Color(0xFF3B1B6A);
+  var notPurple = Color.fromRGBO(213, 212, 234, 1);
+  var purpleBorder = Color.fromRGBO(202, 201, 229, 1);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        margin: EdgeInsets.only(top: 20),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(width: 2.5, color: purpleBorder),
+            borderRadius: BorderRadius.circular(15)),
+        child: Container(
+            child: TextFormField(
+          obscureText: password,
           controller: widget.controller,
           textAlign: TextAlign.center,
           decoration: InputDecoration(
@@ -497,7 +536,13 @@ class _InputBoxState extends State<InputBox> {
               hintText: widget.btnText,
               hintStyle: TextStyle(
                   fontSize: 30, color: Color.fromRGBO(226, 225, 240, 1)),
-              contentPadding: EdgeInsets.only(top: 15, bottom: 15)),
+              contentPadding: EdgeInsets.only(top: 15, bottom: 15),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  password ? Icons.visibility : Icons.visibility_off,
+                ),
+                onPressed: _toggle,
+              )),
         )));
   }
 }
